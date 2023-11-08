@@ -1,8 +1,14 @@
 
-FROM golang:1.21
+FROM golang:1.21 as build-stage
 WORKDIR /app
-COPY go.mod . # go.sum
+COPY go.mod  go.sum ./
 RUN go mod download
-COPY . .
-RUN go build -o /main main.go
-ENTRYPOINT ["/main"]
+COPY *.go ./
+RUN cgo_enadled=0 goos=linux go build -o /catgpt
+EXPOSE 8080
+CMD [ "/catgpt" ]
+FROM gcr.io/distroless/static-debian12:latest-amd64
+WORKDIR /
+COPY --from=build-stage /catgpt /catgpt
+EXPOSE 8080
+ENTRYPOINT [ "/catgpt" ]
