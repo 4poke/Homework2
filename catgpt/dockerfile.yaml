@@ -3,9 +3,9 @@ FROM golang:1.21 AS build-stage
 WORKDIR /go/src/catgpt
 COPY . .
 RUN go mod download
-RUN CGO_ENABLED=0 GOARCH=&{GOARCH} go build -o /go/bin/catgpt
+RUN CGO_ENABLED=0 GOARCH=${GOARCH} go build -o /go/bin/catgpt
 
-FROM gcr.io/distroless/base-debian12:latest-&{GOARCH}
+FROM gcr.io/distroless/base-debian12:latest-${GOARCH}
 COPY --from=build-stage /go/bin/catgpt /
 EXPOSE 8080 9090
 CMD [ "/catgpt" ]
