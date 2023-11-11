@@ -40,7 +40,7 @@ func (c Cat) String() string {
 var (
 	//go:embed tpl/index.html
 	f        embed.FS
-	indexTpl = template.Must(template.ParseFS(f, "tpl/index.html"))
+	indexTpl = template.Must(template.ParseFS(f, "./tpl/index.html"))
 )
 
 func index(w http.ResponseWriter, r *http.Request) {
